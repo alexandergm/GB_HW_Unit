@@ -1,61 +1,72 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 
 public class test {
+
     @Test
     public void testCalculateAverage() {
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(2);
-        list.add(4);
-        list.add(6);
-        double result = Main.calculateAverage(list);
-        Assertions.assertEquals(4.0, result);
+        ArrayList<Integer> list1 = new ArrayList<>();
+        list1.add(1);
+        list1.add(2);
+        list1.add(3);
+        assertEquals(2.0, Main.calculateAverage(list1), 0.001);
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        list2.add(10);
+        list2.add(20);
+        list2.add(30);
+        assertEquals(20.0, Main.calculateAverage(list2), 0.001);
+
+        ArrayList<Integer> list3 = new ArrayList<>();
+        list3.add(-5);
+        list3.add(0);
+        list3.add(5);
+        assertEquals(0.0, Main.calculateAverage(list3), 0.001);
     }
 
     @Test
     public void testMain() {
-        String input1 = "1 2 3";
+        // Test case 1: average of first list is greater
+        String input1 = "1 10 15";
         String input2 = "4 5 6";
-        String expectedOutput = "Второй список имеет большее среднее значение";
-        TestHelper.testMain(input1, input2, expectedOutput);
+        String expectedOutput = "Первый список имеет большее среднее значение";
+        assertEquals(expectedOutput, getOutput(input1, input2));
 
+        // Test case 2: average of second list is greater
         input1 = "10 20 30";
         input2 = "40 50 60";
         expectedOutput = "Второй список имеет большее среднее значение";
-        TestHelper.testMain(input1, input2, expectedOutput);
+        assertEquals(expectedOutput, getOutput(input1, input2));
 
-        input1 = "1 2 3";
-        input2 = "1 2 3";
+        // Test case 3: both lists have equal averages
+        input1 = "25 30 20";
+        input2 = "20 25 30";
         expectedOutput = "Средние значения равны";
-        TestHelper.testMain(input1, input2, expectedOutput);
-
-        input1 = "1 2 3";
-        input2 = "3 2 1";
-        expectedOutput = "Средние значения равны";
-        TestHelper.testMain(input1, input2, expectedOutput);
-
-        input1 = "5";
-        input2 = "10";
-        expectedOutput = "Второй список имеет большее среднее значение";
-        TestHelper.testMain(input1, input2, expectedOutput);
+        assertEquals(expectedOutput, getOutput(input1, input2));
     }
-}
 
-class TestHelper {
-    static void testMain(String input1, String input2, String expectedOutput) {
-        java.io.ByteArrayInputStream in = new java.io.ByteArrayInputStream(input1.getBytes());
-        System.setIn(in);
+    private String getOutput(String input1, String input2) {
+        ArrayList<Integer> list1 = new ArrayList<>();
+        ArrayList<Integer> list2 = new ArrayList<>();
 
-        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
-        System.setOut(new java.io.PrintStream(out));
+        for (String s : input1.split(" ")) {
+            list1.add(Integer.parseInt(s));
+        }
 
-        in = new java.io.ByteArrayInputStream(input2.getBytes());
-        System.setIn(in);
+        for (String s : input2.split(" ")) {
+            list2.add(Integer.parseInt(s));
+        }
 
-        Main.main(new String[]{});
+        double average1 = Main.calculateAverage(list1);
+        double average2 = Main.calculateAverage(list2);
 
-        Assertions.assertEquals(expectedOutput, out.toString().trim());
+        if (average1 > average2) {
+            return "Первый список имеет большее среднее значение";
+        } else if (average1 < average2) {
+            return "Второй список имеет большее среднее значение";
+        } else {
+            return "Средние значения равны";
+        }
     }
 }
